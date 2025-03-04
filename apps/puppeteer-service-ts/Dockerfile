@@ -1,4 +1,6 @@
-FROM node:18-slim
+# Use ARG to make platform configurable
+ARG BUILDPLATFORM=linux/amd64
+FROM --platform=${BUILDPLATFORM} node:18-slim
 
 WORKDIR /usr/src/app
 
@@ -19,7 +21,6 @@ ENV PORT=${PORT}
 EXPOSE ${PORT}
 
 CMD [ "pnpm", "start" ]
-FROM node:18-slim
 
 # Install system dependencies for Playwright
 RUN apt-get update && \

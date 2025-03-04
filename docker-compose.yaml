@@ -20,6 +20,23 @@ x-common-service: &common-service
     - "host.docker.internal:host-gateway"
 
 services:
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+      - ./www:/srv
+    depends_on:
+      - api
+      - puppeteer-service
+    networks:
+      - backend
+    restart: always
+
   puppeteer-service:
     image: trieve/puppeteer-service-ts
     build:

@@ -1,0 +1,63 @@
+# For local development with HTTP and HTTPS
+localhost {
+    # Enable HTTPS but don't redirect
+    tls internal
+    
+    # Disable HTTP to HTTPS redirects
+    @http {
+        protocol http
+    }
+    handle @http {
+        reverse_proxy api:3002
+    }
+    
+    # Handle HTTPS requests
+    @https {
+        protocol https
+    }
+    handle @https {
+        reverse_proxy api:3002
+    }
+    
+    # Detailed logging
+    log {
+        output stdout
+        format json
+        level DEBUG
+    }
+}
+
+# HTTP only for local development
+http://localhost {
+    # Simple reverse proxy for all requests
+    reverse_proxy api:3002
+    
+    # Detailed logging
+    log {
+        output stdout
+        format json
+        level DEBUG
+    }
+}
+
+# For production with a real domain
+# Replace example.com with your actual domain
+# {$DOMAIN:example.com} {
+#     # API routes
+#     handle /api/* {
+#         uri strip_prefix /api
+#         reverse_proxy api:3002
+#     }
+#
+#     # Static content
+#     handle {
+#         root * /srv
+#         file_server
+#         try_files {path} /index.html
+#     }
+#
+#     # Enable logging
+#     log {
+#         output stdout
+#     }
+# } 
