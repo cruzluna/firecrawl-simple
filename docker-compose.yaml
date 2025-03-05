@@ -30,6 +30,8 @@ services:
       - ./caddy_data:/data
       - ./caddy_config:/config
       - ./www:/srv
+    environment:
+      - PUBLIC_IP=${PUBLIC_IP}
     depends_on:
       - api
       - puppeteer-service

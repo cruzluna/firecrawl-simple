@@ -40,24 +40,30 @@ http://localhost {
     }
 }
 
-# For production with a real domain
-# Replace example.com with your actual domain
-# {$DOMAIN:example.com} {
-#     # API routes
-#     handle /api/* {
-#         uri strip_prefix /api
-#         reverse_proxy api:3002
-#     }
-#
-#     # Static content
-#     handle {
-#         root * /srv
-#         file_server
-#         try_files {path} /index.html
-#     }
-#
-#     # Enable logging
-#     log {
-#         output stdout
-#     }
-# } 
+# HTTP-only configuration for production IP
+http://{$PUBLIC_IP} {
+    # Simple reverse proxy for all requests
+    reverse_proxy api:3002
+    
+    # Production logging
+    log {
+        output stdout
+        format json
+    }
+}
+
+# HTTPS configuration for production IP
+{$PUBLIC_IP} {
+    # For IP addresses, we need to use self-signed certificates
+    tls internal
+    
+    # Forward all requests to the API service
+    reverse_proxy api:3002
+    
+    # Production logging
+    log {
+        output stdout
+        format json
+    }
+}
+
