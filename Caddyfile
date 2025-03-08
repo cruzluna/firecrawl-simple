@@ -52,12 +52,9 @@ http://{$PUBLIC_IP} {
     }
 }
 
-# HTTPS configuration for production IP
-{$PUBLIC_IP} {
-    # For IP addresses, we need to use self-signed certificates
-    tls internal
-    
-    # Forward all requests to the API service
+# Domain configuration with automatic HTTPS
+${DOMAIN} {
+    # Simple reverse proxy for all requests
     reverse_proxy api:3002
     
     # Production logging
